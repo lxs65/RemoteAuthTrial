@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
+using EolSim.Handlers;
+using EolSim.RoutingSupport;
 using Microsoft.AspNet.FriendlyUrls;
 
 namespace EolSim
@@ -13,6 +15,8 @@ namespace EolSim
             var settings = new FriendlyUrlSettings();
             settings.AutoRedirectMode = RedirectMode.Permanent;
             routes.EnableFriendlyUrls(settings);
+
+            routes.MapHttpHandler<RemoteAuthenticationHttpHandler>("RemoteAuthenticationHttpHandler", "handler/remoteAuth/{*pathInfo}");
         }
     }
 }
