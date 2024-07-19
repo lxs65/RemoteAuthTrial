@@ -1,5 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddSeq(builder.Configuration.GetSection("Seq"));
+
 // Add services to the container.
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 builder.Services.AddControllersWithViews();
@@ -10,7 +12,7 @@ builder.Services.AddSystemWebAdapters()
         options.RemoteAppUrl = new(builder.Configuration["ReverseProxy:Clusters:fallbackCluster:Destinations:fallbackApp:Address"]!);
         options.ApiKey = builder.Configuration["RemoteAppApiKey"]!;
     })
-    .AddAuthenticationClient(true, options =>
+    .AddAuthenticationClient(false, options =>
     {
         options.AuthenticationEndpointPath = "/handler/remoteAuth";
     });
@@ -29,6 +31,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.Use((context, next) =>
+{
+    return next(context);
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
