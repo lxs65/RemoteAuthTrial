@@ -19,6 +19,7 @@ namespace EolNet6.Controllers
             return View();
         }
 
+        [Authorize(AuthenticationSchemes = "Remote")]
         public IActionResult Privacy()
         {
             return View();

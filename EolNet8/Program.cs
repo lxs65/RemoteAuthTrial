@@ -1,3 +1,5 @@
+AppContext.SetSwitch("Microsoft.AspNetCore.Authentication.SuppressAutoDefaultScheme", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.AddSeq(builder.Configuration.GetSection("Seq"));
@@ -12,7 +14,7 @@ builder.Services.AddSystemWebAdapters()
         options.RemoteAppUrl = new(builder.Configuration["ReverseProxy:Clusters:fallbackCluster:Destinations:fallbackApp:Address"]!);
         options.ApiKey = builder.Configuration["RemoteAppApiKey"]!;
     })
-    .AddAuthenticationClient(false, options =>
+    .AddAuthenticationClient(true, options =>
     {
         options.AuthenticationEndpointPath = "/handler/remoteAuth";
     });
